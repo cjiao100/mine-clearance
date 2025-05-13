@@ -1,54 +1,49 @@
-# React + TypeScript + Vite
+# 扫雷
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+## 项目介绍
 
-Currently, two official plugins are available:
+这是一个基于Web的扫雷游戏实现，使用HTML、CSS和JavaScript开发。
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## 功能特点
 
-## Expanding the ESLint configuration
+- 多种难度级别（初级、中级、高级）
+- 计时器和炸弹计数器
+- 右键标记功能
+- 快速清除周围功能
+- 游戏胜利和失败检测
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+## 如何玩
 
-```js
-export default tseslint.config({
-  extends: [
-    // Remove ...tseslint.configs.recommended and replace with this
-    ...tseslint.configs.recommendedTypeChecked,
-    // Alternatively, use this for stricter rules
-    ...tseslint.configs.strictTypeChecked,
-    // Optionally, add this for stylistic rules
-    ...tseslint.configs.stylisticTypeChecked,
-  ],
-  languageOptions: {
-    // other options...
-    parserOptions: {
-      project: ['./tsconfig.node.json', './tsconfig.app.json'],
-      tsconfigRootDir: import.meta.dirname,
-    },
-  },
-})
-```
+1. 点击任意格子开始游戏
+2. 左键点击格子揭示内容
+3. 右键点击格子标记为可能的炸弹位置
+4. 数字表示周围八个格子中有多少炸弹
+5. 标记出所有炸弹并揭示所有安全格子即可获胜
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+## 项目开发
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+### 技术栈
 
-export default tseslint.config({
-  plugins: {
-    // Add the react-x and react-dom plugins
-    'react-x': reactX,
-    'react-dom': reactDom,
-  },
-  rules: {
-    // other rules...
-    // Enable its recommended typescript rules
-    ...reactX.configs['recommended-typescript'].rules,
-    ...reactDom.configs.recommended.rules,
-  },
-})
-```
+- React + Vite + TS
+- CSS3 (使用Tailwind CSS和daisyUI)
+
+### 开发指南
+
+#### 本地运行
+
+1. 克隆项目
+  ```bash
+  git clone https://github.com/cjiao100/mine-clearance.git
+  cd mine-clearance
+  ```
+
+2. 安装&运行
+  ```bash
+  # 安装依赖
+  pnpm install
+
+  # 运行
+  pnpm run dev
+  ```
+
+3. 在浏览器中访问 `http://localhost:5173`
