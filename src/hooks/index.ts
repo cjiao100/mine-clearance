@@ -1,6 +1,6 @@
 import { useState, useRef, useEffect } from 'react';
-import { generateBoard, revealEmptyCells, calculateFlaggedCount } from '../utils';
-import type { GameState, ModalState } from '../types';
+import { generateBoard, revealEmptyCells, calculateFlaggedCount } from '@/utils';
+import type { GameState, ModalState } from '@/types';
 
 
 export function useMineSweeper() {
@@ -104,6 +104,12 @@ export function useMineSweeper() {
     }
 
     if (gameState.board[row][col] === -1) {
+      setGameState(prevState => ({
+        ...prevState,
+        revealed: prevState.revealed.map((r, i) =>
+          r.map((_c, j) => (i === row && j === col ? 1 : prevState.revealed[i][j]))
+        ),
+      }));
       endGame();
     } else {
       setGameState(prevState => {

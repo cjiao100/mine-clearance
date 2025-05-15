@@ -9,29 +9,35 @@ interface CellProps {
 
 // 根据数字获取对应颜色类名
 const getCellColorClass = (value: number): string => {
-  const colors = [
-    "", "text-blue-600", "text-green-600", "text-red-600",
-    "text-purple-800", "text-red-800", "text-teal-600", "text-black", "text-gray-600"
-  ];
-  return colors[value] || "";
+  return value > 0 && value <= 8 ? `cell-number-${value}` : "";
 };
 
 const Cell: React.FC<CellProps> = ({ value, state, onClick, onContextMenu }) => {
   const isRevealed = state === 1;
   const isFlagged = state === 2;
+  const isMine = isRevealed && value === -1;
 
   return (
     <div
-      className={`w-8 h-8 border flex items-center justify-center text-primary-content cursor-pointer bg-primary ${isRevealed && "bg-primary-content"}`}
+      className={`
+        board-cell
+        ${isRevealed
+          ? (isMine ? 'cell-revealed bg-error/30 animate-reveal' : 'cell-revealed animate-reveal')
+          : (isFlagged ? 'cell-hidden bg-warning/20' : 'cell-hidden')
+        }
+      `}
       onClick={onClick}
       onContextMenu={onContextMenu}
     >
       {isRevealed && value > 0 && (
-        <span className={`font-bold ${getCellColorClass(value)}`}>
+        <span className={`text-xl ${getCellColorClass(value)} animate-reveal`}>
           {value}
         </span>
       )}
-      {isFlagged && <span>🚩</span>}
+      {isMine && (
+        <span className="text-xl cell-mine animate-pulse">💣</span>
+      )}
+      {isFlagged && <span className="text-xl cell-flag animate-bounce-small">🚩</span>}
     </div>
   );
 }

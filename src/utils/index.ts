@@ -1,4 +1,4 @@
-import type { BoardType, RevealedType } from "../types";
+import type { BoardType, RevealedType } from "@/types";
 
 export function generateBoard(rows: number, cols: number, mines: number): number[][] {
   const board = Array.from({ length: rows }, () => Array(cols).fill(0));
