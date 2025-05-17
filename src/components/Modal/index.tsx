@@ -8,10 +8,11 @@ interface ModalProps {
   message?: string;
   onClose: () => void;
   hiddenBtn?: boolean;
+  type?: string;
   children: React.ReactNode;
 }
 
-const Modal: React.FC<ModalProps> = ({ visible, title, message, onClose, children, hiddenBtn = false }) => {
+const Modal: React.FC<ModalProps> = ({ visible, title, message, onClose, children, hiddenBtn = false, type = '' }) => {
   const dialogRef = useRef<HTMLDialogElement>(null);
   const [isAnimating, setIsAnimating] = useState(false);
 
@@ -84,17 +85,17 @@ const Modal: React.FC<ModalProps> = ({ visible, title, message, onClose, childre
       aria-labelledby="modal-title"
     >
       <div
-        className={`bg-base-100 rounded-xl p-5 card-shadow w-full transform transition-all duration-300 ease-out ${
+        className={`bg-base-100 rounded-xl p-5 card-shadow transform transition-all duration-300 ease-out ${
           isAnimating
             ? 'opacity-100 scale-100 translate-y-0'
             : 'opacity-0 scale-95 translate-y-4'
-        } max-h-[90vh] max-w-[90vw] overflow-y-auto`}
+        } max-h-[90vh] max-w-[90vw] min-w-[30vw] overflow-y-auto`}
         onClick={(e) => e.stopPropagation()} // 阻止内容区域的点击事件冒泡
         role="dialog"
         aria-modal="true"
       >
         <div className="flex justify-between items-center mb-3">
-          <h2 className="text-xl font-bold text-base-content" id="modal-title">{title}</h2>
+          <h2 className={`text-xl font-bold text-base-content ${type === 'success' ? 'text-success' : type === 'error' ? 'text-error' : ''}`} id="modal-title">{title}</h2>
           <button
             className="btn btn-circle btn-sm btn-ghost hover:bg-base-200/80"
             onClick={onClose}
@@ -108,7 +109,7 @@ const Modal: React.FC<ModalProps> = ({ visible, title, message, onClose, childre
             {children}
           </div>
         )}
-        {message && (
+        {message && !children && (
           <div className="my-4">
             <p className="text-base-content/90">{message}</p>
           </div>

@@ -148,21 +148,49 @@ function App() {
               />
             )}
 
-            {/* 游戏状态提示 */}
-            {gameStatus === 'won' && (
-              <div className="mt-4 py-2 px-4 bg-success/20 text-success rounded-lg animate-fadeIn">
-                恭喜你赢了！
+            {/* 游戏状态提示（只在模态框不可见时显示） */}
+            {gameStatus === 'won' && !modalState.visible && (
+              <div className="mt-4 py-3 px-6 bg-success/20 text-success rounded-lg animate-fadeIn flex items-center gap-2">
+                <span className="text-xl">🎉</span>
+                <span>恭喜你赢了！</span>
+                <button onClick={() => showLeaderboard()} className="btn btn-sm btn-ghost ml-2">查看排行榜</button>
               </div>
             )}
-            {gameStatus === 'lost' && (
-              <div className="mt-4 py-2 px-4 bg-error/20 text-error rounded-lg animate-shake">
-                游戏结束，再接再厉！
+            {gameStatus === 'lost' && !modalState.visible && (
+              <div className="mt-4 py-3 px-6 bg-error/20 text-error rounded-lg animate-shake flex items-center gap-2">
+                <span className="text-xl">💣</span>
+                <span>游戏结束，再接再厉！</span>
+                <button onClick={resetGame} className="btn btn-sm btn-ghost ml-2">再来一局</button>
               </div>
             )}
 
             {/* 模态窗口 */}
             <Modal {...modalState} onClose={closeModal}>
-              {renderModalContent()}
+              {modalState.type === 'success' && (
+                <div className="flex flex-col items-center">
+                  <div className="w-20 h-20 bg-success/10 rounded-full flex items-center justify-center mb-4 animate-bounce">
+                    <span className="text-4xl">🏆</span>
+                  </div>
+                  <p className="text-center text-lg mb-4">{modalState.message}</p>
+                  <div className="flex gap-3 w-full justify-center mt-4">
+                    <button onClick={() => {closeModal(); resetGame();}} className="btn btn-outline">再来一局</button>
+                    <button onClick={() => {closeModal(); showLeaderboard();}} className="btn btn-primary">查看排行榜</button>
+                  </div>
+                </div>
+              )}
+              {modalState.type === 'error' && (
+                <div className="flex flex-col items-center">
+                  <div className="w-20 h-20 bg-error/10 rounded-full flex items-center justify-center mb-4 animate-pulse">
+                    <span className="text-4xl">💣</span>
+                  </div>
+                  <p className="text-center text-lg mb-4">{modalState.message}</p>
+                  <div className="flex gap-3 w-full justify-center mt-4">
+                    <button onClick={() => {closeModal();}} className="btn btn-ghost">关闭</button>
+                    <button onClick={() => {closeModal(); resetGame();}} className="btn btn-primary">再来一局</button>
+                  </div>
+                </div>
+              )}
+              {(modalState.type !== 'success' && modalState.type !== 'error') && renderModalContent()}
             </Modal>
           </div>
         </div>

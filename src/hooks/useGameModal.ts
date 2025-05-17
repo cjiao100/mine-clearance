@@ -60,10 +60,10 @@ export function useGameModal() {
     setTimeout(() => {
       updateModalState({
         type: 'success',
-        title: '游戏胜利',
+        title: '🎉 恭喜你赢了！',
         visible: true,
         hiddenBtn: true,
-        message: `用时 ${time} 秒`,
+        message: `你以 ${time} 秒的成绩完成了游戏`,
       });
     }, 50);
   }, [updateModalState]);
@@ -72,12 +72,13 @@ export function useGameModal() {
   const showLoseModal = useCallback((time: number, minesLeft: number, revealedCount: number) => {
     // 使用setTimeout轻微延迟，确保游戏状态已更新
     setTimeout(() => {
+      const progressPercent = Math.round((revealedCount / (revealedCount + minesLeft)) * 100);
       updateModalState({
         type: 'error',
-        title: '游戏失败',
+        title: '💣 游戏结束',
         visible: true,
         hiddenBtn: true,
-        message: `用时 ${time} 秒，剩余雷数 ${minesLeft}，已揭示格子数 ${revealedCount}`,
+        message: `坚持了 ${time} 秒 | 完成度 ${progressPercent}% | 还有 ${minesLeft} 个地雷未找到`,
       });
     }, 50);
   }, [updateModalState]);
