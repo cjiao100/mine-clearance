@@ -45,7 +45,7 @@ export function useGameBoard({ onWin, onLose }: UseGameBoardProps) {
         rows = 16; cols = 16; mines = 40;
         break;
       case 'hard':
-        rows = 22; cols = 22; mines = 99;
+        rows = 30; cols = 16; mines = 99;
         break;
       default:
         rows = 10; cols = 10; mines = 10;

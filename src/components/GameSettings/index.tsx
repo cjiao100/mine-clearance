@@ -1,11 +1,16 @@
 import React, { useState, useEffect } from 'react';
 import { useAudio } from '@/contexts/AudioContext';
+import { useLeaderboard } from '@/hooks';
 
 const GameSettings: React.FC = () => {
   // 使用音效钩子
   const audio = useAudio();
   const soundEnabled = audio.soundEnabled;
   const toggleSound = audio.toggleSound;
+  
+  // 使用排行榜钩子获取和设置玩家名称
+  const { playerName, savePlayerName } = useLeaderboard();
+  const [nameInput, setNameInput] = useState(playerName);
 
   // 本地状态
   const [settings, setSettings] = useState({
@@ -54,6 +59,33 @@ const GameSettings: React.FC = () => {
 
   return (
     <div className="mt-2 space-y-3">
+      {/* 玩家名称设置 */}
+      <div className="form-control">
+        <label className="label pb-1">
+          <span className="label-text">玩家名称</span>
+        </label>
+        <div className="flex gap-2">
+          <input
+            type="text"
+            className="input input-sm input-bordered flex-1"
+            placeholder="输入玩家名称"
+            value={nameInput}
+            onChange={(e) => setNameInput(e.target.value)}
+            maxLength={16}
+          />
+          <button 
+            className="btn btn-sm btn-primary" 
+            onClick={() => savePlayerName(nameInput)}
+            disabled={!nameInput.trim() || nameInput === playerName}
+          >
+            保存
+          </button>
+        </div>
+        <div className="text-xs text-base-content/70 mt-1">
+          用于排行榜显示
+        </div>
+      </div>
+      
       <div className="form-control">
         <label className="label cursor-pointer justify-start gap-2">
           <input

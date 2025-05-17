@@ -5,11 +5,15 @@ import { useGameTimer } from './useGameTimer';
 import { useGameStats } from './useGameStats';
 import { useGameStatus } from './useGameStatus';
 import { useGameModal } from './useGameModal';
+import { useLeaderboard } from './useLeaderboard';
 import { useAudio } from '@/contexts/AudioContext';
 
 export function useMineSweeper() {
   // 整合各个子hook
   const { gameStats, recordWin, recordLoss } = useGameStats();
+
+  // 添加排行榜
+  const { addNewRecord } = useLeaderboard();
 
   // 添加音效
   // 尝试在组件渲染时再获取音频上下文
@@ -123,6 +127,14 @@ export function useMineSweeper() {
       stopTimer();
       // 胜利时播放音效
       if (playVictorySound) playVictorySound();
+
+      // 记录成绩到排行榜
+      addNewRecord(
+        currentDifficulty,
+        gameState.timer,
+        gameState.mines
+      );
+
       showWinModal(gameState.timer);
     } else if (gameStatus === 'lost') {
       stopTimer();

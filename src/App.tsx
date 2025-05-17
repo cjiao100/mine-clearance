@@ -3,6 +3,7 @@ import Modal from '@/components/Modal';
 import Board from '@/components/Board';
 import SidePanel from '@/components/SidePanel';
 import ThemeToggle from '@/components/ThemeToggle';
+import Leaderboard from '@/components/Leaderboard';
 import { useMineSweeper } from '@/hooks';
 
 /**
@@ -74,9 +75,7 @@ function App() {
       // 排行榜
       case 'leaderboard':
         return (
-          <div className="text-center py-4">
-            <p className="text-base-content/70 italic">敬请期待排行榜功能...</p>
-          </div>
+          <Leaderboard />
         );
       default:
         return null;
