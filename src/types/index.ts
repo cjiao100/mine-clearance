@@ -6,7 +6,7 @@ export type BoardType = readonly number[][];
 export interface GameState {
   board: BoardType;
   revealed: RevealedType;
-  gameOver: number; // 0=进行中, 1=胜利, -1=失败
+  // gameOver: number; // 0=进行中, 1=胜利, -1=失败
   timer: number; // 游戏计时器
   total: number; // 总格子数
   mines: number; // 地雷数
@@ -21,3 +21,6 @@ export interface ModalState {
   hiddenBtn: boolean;
   message?: string;
 }
+
+// 游戏状态 idle (未开始) | playing（进行中） | paused（暂停） | won（胜利） | lost （失败）
+export type GameStatus = 'idle' | 'playing' | 'paused' | 'won' | 'lost'

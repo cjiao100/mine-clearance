@@ -23,7 +23,6 @@ const ThemeToggle: React.FC = () => {
 
   return (
     <label className="
-      fixed top-5 right-5
       theme-toggle-btn
       backdrop-blur-sm
       transition-all duration-300 ease-in-out
