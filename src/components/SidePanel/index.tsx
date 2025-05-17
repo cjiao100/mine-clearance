@@ -1,4 +1,5 @@
 import ThemeToggle from "@/components/ThemeToggle";
+import GameSettings from "@/components/GameSettings";
 import type { GameStatus } from "@/types";
 import { useState } from "react";
 
@@ -35,7 +36,7 @@ const SidePanel: React.FC<SidePanelProps> = ({
   onShowRules,
   onShowLeaderboard
 }) => {
-  const [activeDifficulty, setActiveDifficulty] = useState('简单');
+  const [activeDifficulty, setActiveDifficulty] = useState('easy');
 
   // 处理难度选择
   const handleDifficultySelect = (difficulty: string) => {
@@ -44,12 +45,15 @@ const SidePanel: React.FC<SidePanelProps> = ({
   };
 
   return (
-    <div className="w-72 shadow-lg min-h-full bg-base-200 p-4 flex flex-col relative">
+    <div className="w-72 shadow-lg h-full bg-base-200 dark:bg-base-300 p-4 flex flex-col relative overflow-y-auto">
       {/* 游戏标题 */}
       <div className="mb-6">
         <h1 className="text-2xl font-bold text-center">
           <span className="bg-clip-text text-transparent bg-gradient-to-r from-primary to-secondary">扫雷游戏</span>
         </h1>
+        <div className="text-center text-xs text-base-content/60 mt-1">
+          简单易上手，考验逻辑思维
+        </div>
       </div>
 
       {/* 游戏控制区 */}
@@ -183,6 +187,16 @@ const SidePanel: React.FC<SidePanelProps> = ({
         </div>
       </div>
 
+      {/* 游戏设置区域 */}
+      <div className="card bg-base-100 shadow-sm mb-4">
+        <div className="card-body p-4">
+          <h2 className="card-title text-base mb-2">游戏设置</h2>
+          <div className="space-y-2">
+            <GameSettings />
+          </div>
+        </div>
+      </div>
+
       {/* 帮助和排行榜按钮 */}
       <div className="card bg-base-100 shadow-sm mb-auto">
         <div className="card-body p-4">
@@ -203,9 +217,14 @@ const SidePanel: React.FC<SidePanelProps> = ({
         </div>
       </div>
 
-      {/* 主题切换按钮 */}
+      {/* 主题切换按钮 - 只在大屏幕上显示 */}
       <div className="mt-4 flex justify-center">
-        <ThemeToggle />
+        <div className="hidden lg:block">
+          <ThemeToggle />
+        </div>
+        <div className="lg:hidden text-xs text-center text-base-content/60 mt-2">
+          © 2025 扫雷游戏
+        </div>
       </div>
     </div>
   );

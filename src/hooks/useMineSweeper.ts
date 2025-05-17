@@ -5,10 +5,17 @@ import { useGameTimer } from './useGameTimer';
 import { useGameStats } from './useGameStats';
 import { useGameStatus } from './useGameStatus';
 import { useGameModal } from './useGameModal';
+import { useAudio } from '@/contexts/AudioContext';
 
 export function useMineSweeper() {
   // 整合各个子hook
   const { gameStats, recordWin, recordLoss } = useGameStats();
+
+  // 添加音效
+  // 尝试在组件渲染时再获取音频上下文
+  const audio = useAudio();
+  const playFlagSound = audio?.playFlagSound;
+  const playVictorySound = audio?.playVictorySound;
 
   const {
     gameStatus,
@@ -33,10 +40,12 @@ export function useMineSweeper() {
   } = useGameBoard({
     onWin: () => {
       recordWin(gameState.timer);
+      if (playVictorySound) playVictorySound(); // 胜利时播放胜利音效
       winGame();
     },
     onLose: () => {
       recordLoss();
+      // 爆炸音效已在Cell组件中处理
       loseGame();
     }
   });
@@ -86,7 +95,11 @@ export function useMineSweeper() {
 
   // 处理右键点击
   const handleCellRightClick = (row: number, col: number) => {
-    handleBoardCellRightClick(row, col, gameStatus);
+    if (gameStatus === 'playing' || gameStatus === 'idle') {
+      // 播放标旗音效
+      if (playFlagSound) playFlagSound();
+      handleBoardCellRightClick(row, col, gameStatus);
+    }
   };
 
   // 处理暂停/继续游戏
@@ -108,9 +121,12 @@ export function useMineSweeper() {
   useEffect(() => {
     if (gameStatus === 'won') {
       stopTimer();
+      // 胜利时播放音效
+      if (playVictorySound) playVictorySound();
       showWinModal(gameState.timer);
     } else if (gameStatus === 'lost') {
       stopTimer();
+      // 爆炸音效已在 Cell 组件中处理
       showLoseModal(
         gameState.timer,
         gameState.mines - gameState.flaggedCount,

@@ -5,6 +5,7 @@ export { useGameTimer } from './useGameTimer';
 export { useGameStats } from './useGameStats';
 export { useGameStatus } from './useGameStatus';
 export { useGameModal } from './useGameModal';
+export { useGameSounds } from './useGameSounds';
 
 // 导出类型
 export type { BoardConfig } from './useGameBoard';
