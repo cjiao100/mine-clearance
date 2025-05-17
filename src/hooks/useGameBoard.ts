@@ -1,6 +1,6 @@
 // useGameBoard.ts
 import { useState } from 'react';
-import { generateBoard, revealEmptyCells, calculateFlaggedCount } from '@/utils';
+import { generateSafeBoard, revealEmptyCells, calculateFlaggedCount } from '@/utils';
 import type { GameState } from '@/types';
 
 // 棋盘配置类型
@@ -33,6 +33,8 @@ export function useGameBoard({ onWin, onLose }: UseGameBoardProps) {
     height: 0,
     mines: 0
   });
+  // 添加一个状态来跟踪是否为第一次点击
+  const [isFirstClick, setIsFirstClick] = useState(true);
 
   // 根据难度创建棋盘
   const createBoard = (difficulty: string) => {
@@ -58,11 +60,14 @@ export function useGameBoard({ onWin, onLose }: UseGameBoardProps) {
       mines: mines
     });
 
-    // 生成棋盘
-    const board = generateBoard(rows, cols, mines);
+    // 重置第一次点击状态
+    setIsFirstClick(true);
+
+    // 生成空棋盘（不放置地雷）
+    const emptyBoard = Array.from({ length: rows }, () => Array(cols).fill(0));
 
     setGameState({
-      board,
+      board: emptyBoard,
       revealed: Array.from({ length: rows }, () => Array(cols).fill(0)),
       timer: 0,
       total: rows * cols,
@@ -71,7 +76,7 @@ export function useGameBoard({ onWin, onLose }: UseGameBoardProps) {
       flaggedCount: 0,
     });
 
-    return { board, rows, cols, mines };
+    return { board: emptyBoard, rows, cols, mines };
   };
 
   // 重置计时器
@@ -93,6 +98,40 @@ export function useGameBoard({ onWin, onLose }: UseGameBoardProps) {
   // 处理单元格点击
   const handleCellClick = (row: number, col: number, gameStatus: string) => {
     if (gameStatus !== 'playing' || gameState.revealed[row][col]) {
+      return;
+    }
+
+    // 如果是第一次点击，确保不会踩雷并生成真正的棋盘
+    if (isFirstClick) {
+      setIsFirstClick(false);
+
+      // 生成确保第一次点击不是地雷的棋盘
+      const { height: rows, width: cols, mines } = boardConfig;
+      const newBoard = generateSafeBoard(rows, cols, mines, row, col);
+
+      // 创建新的revealed数组
+      const newRevealed = Array.from({ length: rows }, () => Array(cols).fill(0));
+
+      // 由于我们确保了第一次点击的格子是空白格子（值为0），所以执行连锁揭开
+      revealEmptyCells(row, col, newBoard, newRevealed);
+
+      // 计算已标记和已揭示的格子数量
+      const [flaggedCount, revealedCount] = calculateFlaggedCount(newRevealed);
+
+      // 更新游戏状态
+      setGameState(prevState => ({
+        ...prevState,
+        board: newBoard,
+        revealed: newRevealed,
+        flaggedCount,
+        revealedCount
+      }));
+
+      // 检查是否获胜（不太可能在第一次点击就赢，但以防万一）
+      if (rows * cols - mines === revealedCount) {
+        setTimeout(() => onWin(), 100);
+      }
+
       return;
     }
 

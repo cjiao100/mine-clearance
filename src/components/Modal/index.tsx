@@ -1,6 +1,6 @@
 // 实现一个模态窗
 import { useEffect, useRef, useState } from 'react';
-import CloseIcon from "@/assets/icons/close.svg";
+import { ReactComponent as CloseIcon } from "@/assets/icons/close.svg";
 
 interface ModalProps {
   visible: boolean;
@@ -79,16 +79,16 @@ const Modal: React.FC<ModalProps> = ({ visible, title, message, onClose, childre
   return (
     <dialog
       ref={dialogRef}
-      className="modal modal-backdrop:bg-base-200/70 modal-backdrop:backdrop-blur-sm"
+      className="modal modal-backdrop:bg-base-200/70 modal-backdrop:backdrop-blur-sm max-h-screen"
       onClick={handleBackdropClick}
       aria-labelledby="modal-title"
     >
       <div
-        className={`bg-base-100 rounded-xl p-5 card-shadow max-w-md w-full transform transition-all duration-300 ease-out ${
+        className={`bg-base-100 rounded-xl p-5 card-shadow w-full transform transition-all duration-300 ease-out ${
           isAnimating
             ? 'opacity-100 scale-100 translate-y-0'
             : 'opacity-0 scale-95 translate-y-4'
-        }`}
+        } max-h-[90vh] max-w-[90vw] overflow-y-auto`}
         onClick={(e) => e.stopPropagation()} // 阻止内容区域的点击事件冒泡
         role="dialog"
         aria-modal="true"
@@ -100,7 +100,7 @@ const Modal: React.FC<ModalProps> = ({ visible, title, message, onClose, childre
             onClick={onClose}
             aria-label="关闭"
           >
-            <img src={CloseIcon} width="18" height="18" alt="关闭" />
+            <CloseIcon className="w-6 h-6" />
           </button>
         </div>
         {children && (

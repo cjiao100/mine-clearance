@@ -4,7 +4,11 @@ import Board from '@/components/Board';
 import SidePanel from '@/components/SidePanel';
 import ThemeToggle from '@/components/ThemeToggle';
 import Leaderboard from '@/components/Leaderboard';
+import WelcomePage from '@/components/WelcomePage';
+import GameRules from '@/components/GameRules';
 import { useMineSweeper } from '@/hooks';
+
+import { ReactComponent as MenuIcon } from "@/assets/icons/menu.svg";
 
 /**
  * 扫雷游戏
@@ -49,28 +53,7 @@ function App() {
       // 游戏规则
       case 'rules':
         return (
-          <div className="space-y-3">
-            {[1, 2, 3, 4, 5, 6].map((num, index) => {
-              const badges = ['badge', 'badge-primary', 'badge-secondary', 'badge-accent', 'badge-info', 'badge-success'];
-              const texts = [
-                '游戏开始，玩家可选择难度（简单、中等、困难）。',
-                '游戏开始后，随机在棋盘上放置地雷，并开始计时，玩家可以查看剩余雷数和已用时间。',
-                '玩家点击单元格，如果点击到地雷，游戏结束；如果点击到空白单元格，显示周围地雷的数量。',
-                '玩家可以右键点击单元格进行标记。',
-                '游戏结束后，玩家可以查看排行榜。',
-                '玩家可以选择不同的难度重新开始游戏。'
-              ];
-
-              return (
-                <div key={num} className="flex items-center gap-2">
-                  <div className={`${badges[index]} w-6 h-6 flex items-center justify-center rounded-full text-sm font-bold`}>
-                    {num}
-                  </div>
-                  <p className="text-base-content">{texts[index]}</p>
-                </div>
-              );
-            })}
-          </div>
+          <GameRules />
         );
       // 排行榜
       case 'leaderboard':
@@ -120,9 +103,7 @@ function App() {
         {/* 移动端菜单按钮 */}
         <div className="lg:hidden fixed top-4 left-4 z-30">
           <label htmlFor="my-drawer" className="btn btn-sm btn-circle bg-primary hover:bg-primary-focus text-white border-none shadow-lg">
-            <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 6h16M4 12h16M4 18h16" />
-            </svg>
+            <MenuIcon className="h-5 w-5" />
           </label>
         </div>
 
@@ -137,7 +118,7 @@ function App() {
 
             {/* 游戏信息区 */}
             <div className="flex flex-col items-center w-full">
-              {gameState.total > 0 ? (
+              {gameStatus !== 'idle' && gameState.total > 0 && (
                 <div className="flex justify-between w-full max-w-md mb-4 bg-base-100 rounded-xl p-4 card-shadow gap-3 animate-fadeIn">
                   <div className="flex items-center gap-3">
                     <div className="w-10 h-10 bg-error/20 hover:bg-error/30 transition-colors rounded-full flex items-center justify-center shadow-sm">
@@ -149,15 +130,16 @@ function App() {
                     <span className="font-mono font-bold text-lg text-base-content">{gameState.timer}s</span>
                   </div>
                 </div>
-              ) : (
-                <div className="bg-base-200/50 px-6 py-3 rounded-xl mb-4 animate-fadeIn">
-                  <p className="text-base text-base-content/80">点击开始游戏，选择难度</p>
-                </div>
               )}
             </div>
 
-            {/* 扫雷棋盘 */}
-            {gameStatus !== 'idle' && (
+            {/* 欢迎页面或扫雷棋盘 */}
+            {gameStatus === 'idle' ? (
+              <WelcomePage
+                onStartGame={startGame}
+                onShowLeaderboard={showLeaderboard}
+              />
+            ) : (
               <Board
                 gameState={gameState}
                 handleCellClick={handleCellClick}
